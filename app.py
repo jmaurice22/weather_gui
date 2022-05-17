@@ -5,20 +5,47 @@ from PIL import ImageTk, Image
 import requests
 
 
-# Date Function
-def get_date(city):
-    pass
+# Method to request server for weather data
+def get_weather():
+    city = entry.get()
+    degree_sign = u"\N{DEGREE SIGN}"
+    # API KEY
+    api_key = 'f0d6ab958d9c3097d6dcbaf7427c4ec4'
+    # BASE URL
+    base_url = 'https://api.openweathermap.org/data/2.5/weather?'
+    # FULL URL
+    full_url = base_url + 'q=' + city + '&' + 'units=imperial' + '&appid=' + api_key
+    # REQUEST TO SERVER
+    response = requests.get(full_url)
+    # check for successful response code (200)
+    if response.status_code == 200:
+        data = response.json()
+        main = data['main']
+        temp = main['temp']
+        temp = int(temp)
+        temp_label = tk.Label(data_frame, text=f"{temp}{degree_sign}F", font=font_tuple)
+        temp_label.grid(row=2, column=0, sticky='nsew')
+        city_label = tk.Label(data_frame, text=city, font=('calibre', 10, 'bold'))
+        city_label.grid(row=1, column=1)
+        entry.delete(0, END)
+    else:
+        # ERROR HANDLING
+        temp_label = tk.Label(data_frame, text="Not Found", font=font_tuple)
+        temp_label.grid(row=2, column=0, sticky='nsew')
+        entry.delete(0, END)
+
+
 
 
 # create a window
 window = tk.Tk()
-window.title("Current Weather")
+window.title("Weather")
 window.geometry('450x300')
 window.iconbitmap('app_icon.ico')
 
 # Date variables
 date = dt.datetime.now()
-format_date = f"{date:%a, %b %d %Y}" + " " + f"{date:%X}"
+format_date = f"{date:%a, %b %d %Y}"
 
 # frame for heading
 header_frame = tk.Frame(window, bg='#4f524f')
@@ -29,7 +56,7 @@ title.pack()
 
 # declaring string variable
 # for storing city value
-city = tk.StringVar()
+# city = tk.StringVar()
 
 # Images for different weather conditions
 # image size is 64px
@@ -53,20 +80,20 @@ entry = tk.Entry(search_frame, relief=tk.GROOVE, bd=5)
 entry.grid(row=0, column=1)
 
 # search button
-button = tk.Button(search_frame, text='Enter', bg="#21cf2d", fg="white", relief=tk.RAISED, font=('calibre', 12, 'bold'))
+button = tk.Button(search_frame, text='Enter', bg="#21cf2d", fg="white", relief=tk.RAISED, font=('calibre', 9, 'bold'),
+                   command=get_weather)
 button.grid(row=0, column=2)
 
 # frame to display temperature and icon
 data_frame = tk.Frame(frame)
-data_frame.rowconfigure([0, 1, 2], minsize=100)
-data_frame.columnconfigure([0, 1, 2, 3], minsize=200)
+data_frame.rowconfigure([0, 1, 2], minsize=50)
+data_frame.columnconfigure([0, 1, 2, 3], minsize=100)
 data_frame.pack(padx=1)
 font_tuple = ("Comic Sans MS", 24, "bold")
 date = tk.Label(data_frame, text=format_date, font=('Comic Sans MS', 10, 'bold'))
 date.grid(row=0, column=0)
-temp_label = tk.Label(data_frame, text="100 F", font=font_tuple)
-temp_label.grid(row=1, column=0, sticky='nsew')
+
 image_label = tk.Label(data_frame, image=sunny)
-image_label.grid(row=1, column=1)
+image_label.grid(row=2, column=1)
 # Run the application
 window.mainloop()
