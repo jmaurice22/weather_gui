@@ -1,8 +1,6 @@
 import tkinter as tk
 from tkinter import *
 import datetime as dt
-
-import snow as snow
 from PIL import ImageTk, Image
 import requests
 
@@ -57,7 +55,6 @@ def show_image(description):
     elif description == "rain":
         image_label = tk.Label(data_frame, image=rain)
         image_label.grid(row=2, column=1)
-
 
 # create a window
 window = tk.Tk()
