@@ -4,14 +4,13 @@ import datetime as dt
 from PIL import ImageTk, Image
 import geocoder
 import requests
-import re
+from config import api_key
+
 
 # Method to request server for weather data
 def get_weather():
     city = entry.get()
     degree_sign = u"\N{DEGREE SIGN}"
-    # API KEY
-    api_key = 'f0d6ab958d9c3097d6dcbaf7427c4ec4'
     # BASE URL
     base_url = 'https://api.openweathermap.org/data/2.5/weather?'
     # FULL URL
